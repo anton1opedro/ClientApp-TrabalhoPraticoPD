@@ -13,7 +13,7 @@ public class Main {
         int argPort;
         String url = "";
         boolean input = false;
-        while(input = false) {
+        while(input == false) {
             if (args.length > 0) {
                 try {
                     argIp = args[0];
@@ -80,7 +80,6 @@ public class Main {
                         secondMenu = true;
                         break;
                     case 3:
-                        System.out.print("Future shows:");
                         utils.getAvailableShows();
                         initialStepCompleted = false;
                         secondMenu = true;
@@ -146,6 +145,10 @@ public class Main {
                     case 4:
                         break;
                     case 5:
+                        utils.getUnpayedReservations(); //TODO (nao esta 100% correto porque para ja a função no servidor está a ir buscar todas as reservas da BD e não aquelas pertencentes ao user - é necessario implementar o JWT)
+                        break;
+                    case 6:
+                        utils.getPayedReservations(); //TODO (nao esta 100% correto porque para ja a função no servidor está a ir buscar todas as reservas da BD e não aquelas pertencentes ao user - é necessario implementar o JWT)
                         break;
                     case 8:
                         initialStepCompleted = false; // Set to false to go back to the initial step
