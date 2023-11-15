@@ -92,11 +92,11 @@ public class Main {
                 System.out.println("1 - Edit my account");
                 System.out.println("2 - Search shows");
                 System.out.println("3 - Select show");
-                System.out.println("4 - Select seats");
-                System.out.println("5 - My unpaid reservations");
-                System.out.println("6 - My paid reservations");
-                System.out.println("7 - Make reservation");
-                System.out.println("8 - Delete reservation");
+                System.out.println("4 - My unpaid reservations");
+                System.out.println("5 - My paid reservations");
+                System.out.println("6 - Make reservation");
+                System.out.println("7 - Delete reservation");
+                System.out.println("8 - Pay Reservation");
                 System.out.println("9 - Logout");
 
                 int choice = scanner.nextInt();
@@ -143,14 +143,28 @@ public class Main {
                         }
                         break;
                     case 4:
-                        break;
-                    case 5:
                         utils.getUnpayedReservations(); //TODO (nao esta 100% correto porque para ja a função no servidor está a ir buscar todas as reservas da BD e não aquelas pertencentes ao user - é necessario implementar o JWT)
                         break;
-                    case 6:
+                    case 5:
                         utils.getPayedReservations(); //TODO (nao esta 100% correto porque para ja a função no servidor está a ir buscar todas as reservas da BD e não aquelas pertencentes ao user - é necessario implementar o JWT)
                         break;
+                    case 6:
+                        System.out.println("Make Reservation:");
+                        System.out.print("Insert Espetaculo Id: ");
+                        int idEspetaculo = Integer.parseInt(scanner.nextLine());
+                        System.out.print("Insert Seat Id: ");
+                        int idSeat = Integer.parseInt(scanner.nextLine());
+                        break;
+                    case 7:
+                        System.out.println("Delete Reservation:");
+                        System.out.print("Insert Espetaculo Id: ");
+                        idEspetaculo = Integer.parseInt(scanner.nextLine());
+                        System.out.print("Insert Seat Id: ");
+                        idSeat = Integer.parseInt(scanner.nextLine());
+                        break;
                     case 8:
+                        System.out.println("Pay Reservation:");
+                    case 9:
                         initialStepCompleted = false; // Set to false to go back to the initial step
                         break;
                     // ... other cases ...
