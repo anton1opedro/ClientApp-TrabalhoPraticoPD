@@ -8,7 +8,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,7 +68,7 @@ public class Utils {
         }
     }
 
-    public void loginAccount(String username, String password){
+    public boolean loginAccount(String username, String password){
         JSONObject jsonBody = new JSONObject();
         try {
             jsonBody.put("username", username);
@@ -84,8 +86,15 @@ public class Utils {
                 .build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            assert response.statusCode() ==  200 : "Connection Error";
-            //Assert.assertEquals(response.body(), "{\"message\":\"ok\"}");
+
+            if (response.statusCode() == 200) {
+                System.out.println("Login Successful");
+            } else if (response.statusCode() == 401) {
+                System.out.println("Invalid username or password");
+            } else {
+                System.out.println("Error: " + response.statusCode());
+            }
+            return response.statusCode() == 200;
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -227,9 +236,9 @@ public class Utils {
         }
     }
 
-    public void getPayedReservations() {
+    public void getPaidReservations(int id_utilizador) {
         HttpClient client = HttpClient.newHttpClient();
-        String serviceUrl = "http://localhost:8080/reservas/pagas";
+        String serviceUrl = "http://localhost:8080/reservas/pagas?id_utilizador=" + id_utilizador;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(serviceUrl))
                 .header("content-type", "application/json")
@@ -238,7 +247,7 @@ public class Utils {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 200) {
-                System.out.println("Payed Reservations:");
+                System.out.println("Paid Reservations:");
                 System.out.println(response.body()); // Print or process the list of shows as needed
             } else {
                 System.out.println("Error retrieving shows. HTTP Status Code: " + response.statusCode());
@@ -248,9 +257,9 @@ public class Utils {
         }
     }
 
-    public void getUnpayedReservations() {
+    public void getUnpaidReservations(int id_utilizador) {
         HttpClient client = HttpClient.newHttpClient();
-        String serviceUrl = "http://localhost:8080/reservas/nao-pagas";
+        String serviceUrl = "http://localhost:8080/reservas/nao-pagas?id_utilizador=" + id_utilizador;
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(serviceUrl))
                 .header("content-type", "application/json")
@@ -259,8 +268,15 @@ public class Utils {
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == 200) {
-                System.out.println("Unpayed Reservations:");
+                System.out.println("Unpaid Reservations:");
                 System.out.println(response.body()); // Print or process the list of shows as needed
+//                JSONArray reservationsArray = new JSONArray(response.body()); //TODO
+//
+//                for (int i = 0; i < reservationsArray.length(); i++) {
+//                    JSONObject reservationObject = reservationsArray.getJSONObject(i);
+//                    System.out.println("ID: " + reservationObject.getInt("id") +
+//                            ", Data_Hora: " + reservationObject.getString("data_hora"));
+//                }
             } else {
                 System.out.println("Error retrieving shows. HTTP Status Code: " + response.statusCode());
             }
@@ -268,5 +284,76 @@ public class Utils {
             throw new RuntimeException(e);
         }
     }
+
+    public void payReservation(int id) {
+        HttpClient client = HttpClient.newHttpClient();
+        String serviceUrl = "http://localhost:8080/reservas/" + id + "/pagamento";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(serviceUrl))
+                .header("content-type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.noBody())
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                System.out.println("Reservation marked as paid.");
+            } else {
+                System.out.println("Error marking reservation as paid. HTTP Status Code: " + response.statusCode());
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteReservation(int id) {
+        HttpClient client = HttpClient.newHttpClient();
+        String serviceUrl = "http://localhost:8080/reservas/apaga-reserva/" + id;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(serviceUrl))
+                .DELETE()
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                System.out.println("Reservation deleted successfully.");
+            } else {
+                System.out.println("Error deleting reservation. HTTP Status Code: " + response.statusCode());
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void makeReservation(int idEspetaculo, int idLugar, int idUtilizador) {
+        JSONObject jsonBody = new JSONObject();
+        try {
+            jsonBody.put("idEstpetaculo", idEspetaculo);
+            jsonBody.put("idLugar", idLugar);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        HttpClient client = HttpClient.newHttpClient();
+        String serviceUrl = "http://localhost:8080/reservas/criar-reserva?idUtilizador=" + idUtilizador;
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(serviceUrl))
+                .header("content-type","application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(String.valueOf(jsonBody)))
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                System.out.println("Reservation Successful");
+            } else if (response.statusCode() == 401) {
+                System.out.println("Reservation Failed");
+            } else {
+                System.out.println("Error: " + response.statusCode());
+            }
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 
 }

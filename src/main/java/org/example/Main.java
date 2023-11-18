@@ -75,9 +75,10 @@ public class Main {
                         username = scanner.nextLine();
                         System.out.print("Enter password: ");
                         password = scanner.nextLine();
-                        utils.loginAccount(username, password);
-                        initialStepCompleted = true; // Set to true once the initial steps are completed
-                        secondMenu = true;
+                        if (utils.loginAccount(username, password)) {
+                            initialStepCompleted = true; // Set to true once the initial steps are completed
+                            secondMenu = true;
+                        }
                         break;
                     case 3:
                         utils.getAvailableShows();
@@ -143,27 +144,38 @@ public class Main {
                         }
                         break;
                     case 4:
-                        utils.getUnpayedReservations(); //TODO (nao esta 100% correto porque para ja a função no servidor está a ir buscar todas as reservas da BD e não aquelas pertencentes ao user - é necessario implementar o JWT)
+                        System.out.println("Please enter your User ID:");
+                        int id_utilizador = scanner.nextInt();
+                        System.out.println("Your Unpaid Reservations:");
+                        utils.getUnpaidReservations(id_utilizador);
                         break;
                     case 5:
-                        utils.getPayedReservations(); //TODO (nao esta 100% correto porque para ja a função no servidor está a ir buscar todas as reservas da BD e não aquelas pertencentes ao user - é necessario implementar o JWT)
+                        System.out.println("Please enter your User ID:");
+                        id_utilizador = scanner.nextInt();
+                        System.out.println("Your Paid Reservations:");
+                        utils.getPaidReservations(id_utilizador);
                         break;
                     case 6:
                         System.out.println("Make Reservation:");
+                        System.out.println("Insert your User Id:");
+                        int idUtilizador = Integer.parseInt(scanner.nextLine());
                         System.out.print("Insert Espetaculo Id: ");
                         int idEspetaculo = Integer.parseInt(scanner.nextLine());
                         System.out.print("Insert Seat Id: ");
-                        int idSeat = Integer.parseInt(scanner.nextLine());
+                        int idLugar = Integer.parseInt(scanner.nextLine());
+                        utils.makeReservation(idEspetaculo, idLugar, idUtilizador);
                         break;
                     case 7:
                         System.out.println("Delete Reservation:");
-                        System.out.print("Insert Espetaculo Id: ");
-                        idEspetaculo = Integer.parseInt(scanner.nextLine());
-                        System.out.print("Insert Seat Id: ");
-                        idSeat = Integer.parseInt(scanner.nextLine());
+                        System.out.print("Insert Reserva Id: ");
+                        int idReserva = Integer.parseInt(scanner.nextLine());
+                        utils.deleteReservation(idReserva);
                         break;
                     case 8:
-                        System.out.println("Pay Reservation:");
+                        System.out.println("Introduce the reservation Id you wish to pay:");
+                        idReserva = Integer.parseInt(scanner.nextLine());
+                        utils.payReservation(idReserva);
+                        break;
                     case 9:
                         initialStepCompleted = false; // Set to false to go back to the initial step
                         break;
