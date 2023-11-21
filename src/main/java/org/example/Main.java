@@ -35,8 +35,13 @@ public class Main {
         // Connect to listening port / socket
         try {
             Socket socket = new Socket(argIp, listeningPort);
-            Client clientSocket = new Client(socket);
-            clientSocket.listeningToServer();
+            String username = "New Client";
+            Client clientSocket = new Client(socket, username);
+            clientSocket.start();
+            //Thread t = new Thread(clientSocket);
+            //t.start();
+            //clientSocket.listeningToServer();
+            // clientSocket.sendMessage();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -45,9 +50,6 @@ public class Main {
         boolean choosing = true;
         boolean initialStepCompleted = false;
         boolean secondMenu = false;
-//        String name = "";
-//        String username = "";
-//        String password = "";
         Scanner scanner = new Scanner(System.in);
         while (choosing) {
             if (!initialStepCompleted) {
@@ -56,7 +58,7 @@ public class Main {
                 System.out.println("2 - Login");
                 System.out.println("3 - See available shows");
                 int choice = scanner.nextInt();
-                scanner.nextLine(); // to consume the newline character
+                scanner.nextLine();
 
                 switch (choice) {
                     case 1:
@@ -179,11 +181,9 @@ public class Main {
                     case 9:
                         initialStepCompleted = false; // Set to false to go back to the initial step
                         break;
-                    // ... other cases ...
                 }
             }
         }
-        // etc.
 
     }
 }
