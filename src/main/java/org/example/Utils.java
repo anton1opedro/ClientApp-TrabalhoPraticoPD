@@ -147,25 +147,6 @@ public class Utils {
         }
     }
 
-//    OLD SEARCH SHOWS - FILTERING ON THE SERVER SIDE
-//    public void searchShows(String pais, String local, String tipo, String data_hora) {
-//        String url = "http://localhost:8080/espetaculos";
-//        try {
-//            URI uri = new URI(url + "?pais=" + pais + "&local=" + local + "&tipo=" + tipo + "&data_hora=" + data_hora);
-//            HttpClient client = HttpClient.newHttpClient();
-//            HttpRequest request = HttpRequest.newBuilder()
-//                    .uri(uri)
-//                    .GET()
-//                    .build();
-//
-//            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-//            System.out.println(response.body());
-//        } catch (URISyntaxException | InterruptedException | IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-//  NEW SEARCH SHOES - FILTERING ON THE CLIENT SIDE
     public void searchShows(String pais, String local, String tipo, String data_hora) {
         String url = "http://localhost:8080/espetaculos";
         try {
@@ -270,7 +251,7 @@ public class Utils {
             if (response.statusCode() == 200) {
                 System.out.println("Unpaid Reservations:");
                 System.out.println(response.body()); // Print or process the list of shows as needed
-//                JSONArray reservationsArray = new JSONArray(response.body()); //TODO
+//                JSONArray reservationsArray = new JSONArray(response.body());
 //
 //                for (int i = 0; i < reservationsArray.length(); i++) {
 //                    JSONObject reservationObject = reservationsArray.getJSONObject(i);

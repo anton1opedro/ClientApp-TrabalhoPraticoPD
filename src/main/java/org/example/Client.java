@@ -24,7 +24,7 @@ public class Client extends Thread{
             bufferedWriter.newLine();
             bufferedWriter.flush();
 
-            Scanner scanner = new Scanner(System.in);   //TODO PODE N SER NECESSARIO
+            Scanner scanner = new Scanner(System.in);
             while (socket.isConnected()) {
                 String messageToSend = scanner.nextLine();
                 bufferedWriter.write(username + ": " + messageToSend);
@@ -38,7 +38,6 @@ public class Client extends Thread{
 
     @Override
     public void run() {
-        System.out.println("AQUI RUN");
         String msg = "";
         try {
             Thread.sleep(1000);

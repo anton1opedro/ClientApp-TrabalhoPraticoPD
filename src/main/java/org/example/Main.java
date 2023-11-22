@@ -38,10 +38,8 @@ public class Main {
             String username = "New Client";
             Client clientSocket = new Client(socket, username);
             clientSocket.start();
-            //Thread t = new Thread(clientSocket);
-            //t.start();
             //clientSocket.listeningToServer();
-            // clientSocket.sendMessage();
+            //clientSocket.sendMessage();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
